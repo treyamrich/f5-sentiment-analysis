@@ -44,15 +44,15 @@ class SFDataManager:
         start, end = rowRange
         print(f"Adding {end - start} emails to cases")
 
+        #Create emails using the data, assigning a partial-random id
         emails = []
         df = pd.read_csv(dataFile)
-        
         for i in range(start, min(end+1, len(df))):
             emails.append({
                 'Subject': 'Python Test Data Email', 
                 'TextBody': df[textColName][i], 
                 'ParentId': caseIds[i % len(caseIds)]
             })
-        print(emails)
+        
         res = self.sf.bulk.EmailMessage.insert(emails)
         print(res)
