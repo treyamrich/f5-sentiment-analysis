@@ -18,4 +18,6 @@ with open("aux_data/case-ids.txt", "r") as f:
 sfdm = SFDataManager(UNAME, PW, TOK, True)
 sfdm.login()
 
-sfdm.addEmailToCases(TEST_DATA, (0, 200), caseIds, "text")
+#Recently added rows 0-200 inclusive
+#sfdm.addEmailToCases(TEST_DATA, (0, 200), caseIds, "text", "sentiment")
+sfdm.delEmails(caseIds)
