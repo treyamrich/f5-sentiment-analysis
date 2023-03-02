@@ -63,7 +63,7 @@ class SentimentModelMetrics:
             self.label_metrics[label]['precision'] = precision
             self.label_metrics[label]['f1 score'] = self.calc_f1_score(precision, recall)
 
-        self.macro_avg_f1_score = sum(map(lambda d: d['f1 score'], list(self.label_metrics.values()))) / self.NUM_LABELS
+        self.macro_avg_f1_score = sum(map(lambda d: d['f1 score'], list(self.label_metrics.values()))) / n
         #micro avg f1 = total TP / (total TP + 0.5 (total FP + total FN))
         #since total FP == totalFN, denominator is just entire data
         self.micro_avg_f1_score = total_TP / len(self.data)
