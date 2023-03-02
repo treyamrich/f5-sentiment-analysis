@@ -1,3 +1,5 @@
+import pandas as pd
+
 class SentimentModelMetrics:
     def __init__(self, data):
         """
@@ -87,30 +89,28 @@ class SentimentModelMetrics:
         return label_metric[metric_name]
     
     def print_all_metrics(self):
+        
         sentiment_map = {0: 'neutral ', 1: 'positive', 2: 'negative'}
         n = self.NUM_LABELS
-        INDENT = "\t\t"
+        data = []
+        columns = [metric_name for metric_name in self.label_metrics[0].keys()]
+        columns.insert(0, 'sentiment')
+
         def format_metric(metric):
             metric = str(metric)
             return metric[:min(10, len(metric))]
         
         print(f"\nTotal predictions: {len(self.data)}")
-        print(f"\nMacro-averaged f1 score: {format_metric(self.macro_avg_f1_score)}")
+        print(f"Macro-averaged f1 score: {format_metric(self.macro_avg_f1_score)}")
         print(f"Micro-averaged f1 score: {format_metric(self.micro_avg_f1_score)}\n")
 
-        print("\n\t\t\tLabel Metrics")
-        print(INDENT + "\t".join([metric for metric in self.label_metrics[0].keys()]))
         for label in range(n):
-            output = f"{sentiment_map[label]}\t"
+            row = [sentiment_map[label]]
             metrics = self.label_metrics[label]
-            #Display all metrics
-            print(output + "\t".join([format_metric(metric) for metric in metrics.values()]))
-
-        print(f"\n{INDENT}Confusion Matrix (Row = Actual, Col = Predictions)")
-        print(INDENT + "\t".join([sentiment_map[label] for label in range(n)]))
-        for label in range(n):
-            line = f"{sentiment_map[label]}\t"
-            for val in self.confusion_matrix[label]:
-                line += str(val) + "\t\t"
-            print(line)
+            for metric in metrics.keys():
+                row.append(metrics[metric])
+            data.append(row)
+        df = pd.DataFrame(data)
+        df.columns = columns
+        print(df)
         
