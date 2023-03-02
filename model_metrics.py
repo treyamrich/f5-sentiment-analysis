@@ -88,7 +88,8 @@ class SentimentModelMetrics:
     
     def print_all_metrics(self):
         sentiment_map = {0: 'neutral ', 1: 'positive', 2: 'negative'}
-
+        n = self.NUM_LABELS
+        INDENT = "\t\t"
         def format_metric(metric):
             metric = str(metric)
             return metric[:min(10, len(metric))]
@@ -96,9 +97,20 @@ class SentimentModelMetrics:
         print(f"\nTotal predictions: {len(self.data)}")
         print(f"\nMacro-averaged f1 score: {format_metric(self.macro_avg_f1_score)}")
         print(f"Micro-averaged f1 score: {format_metric(self.micro_avg_f1_score)}\n")
-        print("\t\t" + "\t".join([metric for metric in self.label_metrics[0].keys()]))
-        for label in range(self.NUM_LABELS):
+
+        print("\n\t\t\tLabel Metrics")
+        print(INDENT + "\t".join([metric for metric in self.label_metrics[0].keys()]))
+        for label in range(n):
             output = f"{sentiment_map[label]}\t"
             metrics = self.label_metrics[label]
             #Display all metrics
             print(output + "\t".join([format_metric(metric) for metric in metrics.values()]))
+
+        print(f"\n{INDENT}Confusion Matrix (Row = Actual, Col = Predictions)")
+        print(INDENT + "\t".join([sentiment_map[label] for label in range(n)]))
+        for label in range(n):
+            line = f"{sentiment_map[label]}\t"
+            for val in self.confusion_matrix[label]:
+                line += str(val) + "\t\t"
+            print(line)
+        
